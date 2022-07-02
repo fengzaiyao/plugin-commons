@@ -13,6 +13,9 @@
     <groupId>io.github.fengzaiyao</groupId>
     <artifactId>plugin-common</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
+    <name>fengzaiyao-plugin-commons</name>
+    <description>fengzaiyao plugin about commons-lang</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -52,50 +55,41 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
-        </dependency>
-
     </dependencies>
 
-    <!--添加开源协议版本-->
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <!--添加作者信息-->
+    <!--作者信息-->
     <developers>
         <developer>
             <name>fengzaiyao</name>
             <email>2677176483@qq.com</email>
-            <organization>https://blog.csdn.net/qq_43466417</organization>
+            <url>https://github.com/fengzaiyao/plugin-commons.git</url>
         </developer>
     </developers>
 
-    <!--添加项目信息-->
+    <!--项目地址-->
+    <url>https://github.com/fengzaiyao/plugin-commons.git</url>
+
+    <!--开源协议版本-->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo,manual</distribution>
+        </license>
+    </licenses>
+
+    <!--项目信息-->
     <scm>
-        <connection>scm:git@github.com:fengzaiyao/plugin-commons.git</connection>
-        <developerConnection>scm:git@github.com:fengzaiyao/plugin-commons.git</developerConnection>
-        <url>git@github.com:fengzaiyao/plugin-commons.git</url>
+        <connection>https://github.com/fengzaiyao/plugin-commons.git</connection>
+        <developerConnection>https://github.com/fengzaiyao/plugin-commons.git</developerConnection>
+        <url>https://github.com/fengzaiyao/plugin-commons.git</url>
     </scm>
 
     <!--添加仓库信息-->
     <distributionManagement>
         <snapshotRepository>
             <id>sonatype</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>sonatype</id>
@@ -105,67 +99,79 @@
 
     <build>
         <plugins>
-            <!--插件1-->
+            <!--1.编译插件,设置源码以及编译的jdk版本-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-            <!--插件2-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-            <!--插件3-->
+            <!--2.打包源码的插件-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <attach>true</attach>
-                </configuration>
+                <version>2.2.1</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>attach-sources</id>
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-            <!--插件4-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
-            </plugin>
-            <!--插件5-->
+            <!--3.javadoc文档生成插件-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>2.9.1</version>
                 <configuration>
-                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-                    <additionalJOptions>
-                        <additionalJOption>-Xdoclint:none</additionalJOption>
-                    </additionalJOptions>
+                    <!-- 忽略生成文档中的错误 -->
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <aggregate>true</aggregate>
+                    <charset>UTF-8</charset><!-- utf-8读取文件 -->
+                    <encoding>UTF-8</encoding><!-- utf-8进行编码代码 -->
+                    <docencoding>UTF-8</docencoding><!-- utf-8进行编码文档 -->
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-            <!--插件6 有问题-->
+            <!--4.gpg插件,上传需要进行验证用户名和密码过程中需要用到的插件-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--5.部署插件-->
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>sonatype</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>
