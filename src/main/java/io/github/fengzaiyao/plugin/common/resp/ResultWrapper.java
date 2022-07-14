@@ -10,18 +10,18 @@ import java.io.Serializable;
 @Getter
 @Builder
 public class ResultWrapper<T> implements Serializable {
-	/**
-	 * 提示信息
-	 */
-	private String msg;
+    /**
+     * 提示信息
+     */
+    private String msg;
 
-	/**
-	 * 返回码
-	 */
-	private int code;
+    /**
+     * 返回码
+     */
+    private int code;
 
-	/**
-	 * 数据内容
-	 */
-	private T data;
+    /**
+     * 数据内容
+     */
+    private T data;
 }
