@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.text.DateFormat;
+import java.text.ParseException;
 
 public class TimeUtil {
 
@@ -32,12 +34,77 @@ public class TimeUtil {
     }
 
     /**
+     * 格式化时间戳-精确到秒
+     *
+     * @param time 时间
+     */
+    public static String formatDateTime(Date time) {
+        return dateTimeFormat.format(time);
+    }
+
+    /**
      * 格式化时间戳-精确到日
      *
      * @param timeStamp 毫秒级时间戳
      */
     public static String formatDate(Long timeStamp) {
         return dateFormat.format(new Date(timeStamp));
+    }
+
+    /**
+     * 格式化时间戳-精确到日
+     *
+     * @param time 时间
+     */
+    public static String formatDate(Date time) {
+        return dateFormat.format(time);
+    }
+
+    /**
+     * 字符串转为时间
+     *
+     * @param timeStr 时间字符串
+     * @param format  格式化类
+     */
+    public static Date parseTimeString(String timeStr, DateFormat format) {
+        try {
+            return format.parse(timeStr);
+        } catch (ParseException ex) {
+            return null;
+        }
+    }
+
+    /**
+     * 字符串转为时间
+     *
+     * @param timeStr 时间字符串
+     */
+    public static Date parseDate(String timeStr) {
+        return parseTimeString(timeStr, dateFormat);
+    }
+
+    /**
+     * 字符串转为时间
+     *
+     * @param timeStr 时间字符串
+     */
+    public static Date parseDateTime(String timeStr) {
+        return parseTimeString(timeStr, dateTimeFormat);
+    }
+
+    /**
+     * 获取今年最后一天的结束时间戳
+     */
+    public static Long getThisYearEndTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTimeInMillis();
     }
 
     /**
