@@ -1,6 +1,9 @@
 package io.github.fengzaiyao.plugin.common.util;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -183,5 +186,42 @@ public class TimeUtil {
      */
     public static Long getAfterDailyStartTime(Integer days, Long timeStamp, String timeZone) {
         return getDailyStartTime((timeStamp + (days * dailyTime)), timeZone);
+    }
+
+    /**
+     * 分割时间
+     *
+     * @param beginTime 开始时间 例如 "2023-09-01"
+     * @param endTime   结束时间 例如 "2023-09-07"
+     * @param interval  分割天数 例如 3
+     * @return [2023-09-01, 2023-09-03],[2023-09-04, 2023-09-06],[2023-09-07, 2023-09-07]
+     */
+    public static String[][] intervalTime(String beginTime, String endTime, Integer interval) {
+        LocalDate l = parseDate(beginTime).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate r = parseDate(endTime).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return intervalTime(l, r, interval);
+    }
+
+    /**
+     * 分割时间
+     *
+     * @param beginTime 开始时间 例如 "2023-09-01"
+     * @param endTime   结束时间 例如 "2023-09-07"
+     * @param interval  分割天数 例如 3
+     * @return [2023-09-01, 2023-09-03],[2023-09-04, 2023-09-06],[2023-09-07, 2023-09-07]
+     */
+    public static String[][] intervalTime(LocalDate beginTime, LocalDate endTime, Integer interval) {
+        int segments = (int) Math.ceil((double) (ChronoUnit.DAYS.between(beginTime, endTime) + 1) / interval);
+        String[][] ret = new String[segments][2];
+        LocalDate begin = beginTime;
+        for (int i = 0; i < segments; i++) {
+            LocalDate end = begin.plusDays(interval - 1);
+            if (end.isAfter(endTime)) {
+                end = endTime;
+            }
+            ret[i] = new String[]{begin.toString(), end.toString()};
+            begin = end.plusDays(1);
+        }
+        return ret;
     }
 }
